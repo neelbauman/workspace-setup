@@ -1,39 +1,39 @@
-# --- Visual Studio Code Install ---
 ---
+# --- Visual Studio Code Install ---
 - name: Clean up old/bad VSCode GPG key (if exists)
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /usr/share/keyrings/microsoft.gpg
     state: absent
 
 - name: Add Microsoft GPG key (using shell pipeline)
-  become: yes
+  become: true
   ansible.builtin.shell:
     # VSCode公式のインストール手順 (curl ... | gpg --dearmor)
     cmd: "curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft.gpg"
 
 - name: Ensure Microsoft GPG key has correct permissions
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /usr/share/keyrings/microsoft.gpg
     mode: '0644' # a+r (all users read)
     state: file # 存在を確認
 
 - name: Clean up old VSCode list file (if exists)
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/vscode.list
     state: absent
 
 - name: Add VSCode repository
-  become: yes
+  become: true
   ansible.builtin.apt_repository:
     repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
     filename: vscode
     state: present
 
 - name: Install VSCode
-  become: yes
+  become: true
   ansible.builtin.apt:
     name: code
     state: present

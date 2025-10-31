@@ -1,6 +1,6 @@
 ---
 - name: Install ImageMagick
-  become: yes
+  become: true
   ansible.builtin.apt:
     name: imagemagick
     state: present
@@ -8,13 +8,13 @@
 # --- GitHub CLI Install ---
 
 - name: Clean up old GitHub CLI list file (if exists)
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/github-cli.list
     state: absent
 
 - name: Add GitHub CLI GPG key
-  become: yes
+  become: true
   ansible.builtin.get_url:
     url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
     dest: /usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -22,14 +22,14 @@
     force: yes
 
 - name: Add GitHub CLI repository
-  become: yes
+  become: true
   ansible.builtin.apt_repository:
     repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
     filename: github-cli
     state: present
 
 - name: Install GitHub CLI
-  become: yes
+  become: true
   ansible.builtin.apt:
     name: gh
     state: present
@@ -37,20 +37,20 @@
 
 # --- Docker Engine Install ---
 - name: Ensure /etc/apt/keyrings directory exists
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /etc/apt/keyrings
     state: directory
     mode: '0755'
 
 - name: Clean up old/bad Docker GPG key (if exists)
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /etc/apt/keyrings/docker.gpg
     state: absent
 
 - name: Add Docker GPG key (using shell pipeline)
-  become: yes
+  become: true
   ansible.builtin.shell:
     # curl -fsSL ... | gpg --dearmor -o ...
     # This command is now forced to run because the old file was removed.
@@ -58,27 +58,27 @@
   # 'creates:' argument is removed to ensure it always runs after cleanup
 
 - name: Ensure Docker GPG key has correct permissions
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /etc/apt/keyrings/docker.gpg
     mode: '0644' # a+r (all users read)
     state: file # Ensure it exists after creation
 
 - name: Clean up old Docker list file (if exists)
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/docker.list
     state: absent
 
 - name: Add Docker repository
-  become: yes
+  become: true
   ansible.builtin.apt_repository:
     repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
     filename: docker
     state: present
 
 - name: Install Docker Engine packages
-  become: yes
+  become: true
   ansible.builtin.apt:
     name:
       - docker-ce

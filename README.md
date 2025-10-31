@@ -53,9 +53,9 @@ cd workspace-setup
     ```bash
     cd chromebook
     ```
-2.  `vars/main.yml` をエディタで開き、`target_user` をあなたのLinuxユーザー名に正しく修正してください。
+2.  `vars/main.yml` をエディタで開き、必要に応じて Ansible が理解するカスタム変数を設定します。
     ```yaml:vars/main.yml
-    # ⬅️ この 'your_username' をご自身のLinuxユーザー名に書き換えてください
+    # ⬅️ 必要があれば、このように変数を定義します。
     ---
     target_user: "your_username"
     ```
