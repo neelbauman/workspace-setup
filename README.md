@@ -2,18 +2,17 @@
 
 1.  **準備:**
 
-    1.  上記ファイル群でGitリポジトリ（例: `my-workstation-setup`）を作成し、GitHubにPushします。
+    1.  上記ファイル群でセットアップ用ディレクトリ（例: `dev`）を作成し、GitHubにPushします。
     2.  `vars/main.yml` の `target_user` を編集します。
-    3.  `vars/secrets.yml` に機密情報を書き、`ansible-vault encrypt vars/secrets.yml` で暗号化します。（Vaultパスワードを覚えます）
-    4.  `bootstrap.sh` の `REPO_URL` をあなたのリポジトリURLに書き換えます。
-    5.  変更をコミット＆プッシュします。
+    3.  `vars/secrets.yml.template` を `vars/secrets.yml` にコピーして機密情報を書き、`ansible-vault encrypt vars/secrets.yml` で暗号化します。（Vaultパスワードを覚えます）
+    4.  変更をコミット＆プッシュします。
 
 2.  **新しいLinux環境での実行:**
 
     1.  まっさらなDebian/Ubuntuにログインします。
     2.  `bootstrap.sh` のURLを指定して、以下のコマンドを**1行実行**します。
         ```bash
-        curl -sL https://raw.githubusercontent.com/your-name/my-workstation-setup/main/bootstrap.sh | bash
+        curl -sL https://github.com/neelbauman/workspace-setup/main/bootstrap.sh | bash
         ```
     3.  `sudo`のパスワードを1回、Vaultのパスワードを1回入力します。
     4.  Ansibleが実行され、すべての設定が自動的に行われます。
