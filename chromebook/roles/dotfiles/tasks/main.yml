@@ -29,7 +29,7 @@
 - name: Create secret environment variables file from template
   ansible.builtin.template:
     src: secret_env.conf.j2
-    dest: "/home/{{ target_user }}/.config/environment.d/99-secrets.conf"
+    dest: "/home/{{ ansible_user_id }}/.config/environment.d/99-secrets.conf"
     mode: '0600' # 機密情報なのでパーミッションを絞る
 
 - name: Copy .bashrc
