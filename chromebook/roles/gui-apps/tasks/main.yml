@@ -1,0 +1,20 @@
+# VSCode のインストール
+---
+- name: Add Microsoft GPG key
+  ansible.builtin.get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /usr/share/keyrings/microsoft.gpg
+    mode: '0644'
+    force: yes
+
+- name: Add VSCode repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+    filename: vscode
+    state: present
+
+- name: Install VSCode
+  ansible.builtin.apt:
+    name: code  # パッケージ名は 'code'
+    state: present
+    update_cache: yes

@@ -1,0 +1,13 @@
+# build-essential, git, apt-transport-https などの基本パッケージ
+---
+- name: Install essential system packages
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - git
+      - ansible
+      - curl
+      - gpg
+      - ca-certificates
+      - apt-transport-https  # 外部リポジトリ追加に必要
+    state: present

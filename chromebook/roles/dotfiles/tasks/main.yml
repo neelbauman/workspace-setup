@@ -1,0 +1,33 @@
+---
+- name: Ensure user environment directory exists
+  ansible.builtin.file:
+    path: "/home/{{ target_user }}/.config/environment.d"
+    state: directory
+    mode: '0755'
+
+- name: Set Fcitx5 environment variables
+  ansible.builtin.lineinfile:
+    path: "/home/{{ target_user }}/.config/environment.d/im.conf"
+    line: "{{ item.line }}"
+    regexp: "^{{ item.regexp | regex_escape() }}"
+    create: yes
+    mode: '0644'
+  loop:
+    - { regexp: 'GTK_IM_MODULE=', line: 'GTK_IM_MODULE=fcitx' }
+    - { regexp: 'QT_IM_MODULE=', line: 'QT_IM_MODULE=fcitx' }
+    - { regexp: 'XMODIFIERS=', line: 'XMODIFIERS="@im=fcitx"' }
+    - { regexp: 'GDK_BACKEND=', line: 'GDK_BACKEND=x11' }
+
+- name: Set Fcitx5 autostart in .sommelierrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{ target_user }}/.sommelierrc"
+    line: "/usr/bin/fcitx5 -d"
+    regexp: "^/usr/bin/fcitx5 -d"
+    create: yes
+    mode: '0644'
+
+- name: Create secret environment variables file from template
+  ansible.builtin.template:
+    src: secret_env.conf.j2
+    dest: "/home/{{ target_user }}/.config/environment.d/99-secrets.conf"
+    mode: '0600' # 機密情報なのでパーミッションを絞る

@@ -1,0 +1,4 @@
+# 汎用変数を定義します
+# この 'your_username' をご自身のLinuxユーザー名に書き換えてください
+---
+target_user: "adelie"

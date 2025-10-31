@@ -1,0 +1,20 @@
+# 日本語パッケージのインストールとロケール設定 (sudo)
+---
+- name: Install Japanese task, fonts, and Fcitx5
+  ansible.builtin.apt:
+    name:
+      - task-japanese
+      - fonts-noto-cjk
+      - fcitx5-mozc
+      - locales
+    state: present
+
+- name: Set system locale to ja_JP.UTF-8
+  ansible.builtin.command:
+    cmd: "localectl set-locale LANG=ja_JP.UTF-8"
+  changed_when: false # localectl は冪等性があるが、状態を読み取らないため
+
+- name: Set system language to ja_JP:ja
+  ansible.builtin.command:
+    cmd: 'localectl set-locale LANGUAGE="ja_JP:ja"'
+  changed_when: false

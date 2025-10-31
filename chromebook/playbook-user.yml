@@ -1,0 +1,11 @@
+# ユーザー権限 (become: no) で実行するタスク
+---
+- name: Configure Workstation (User-specific)
+  hosts: workstation
+  become: false # 一般ユーザーとして実行
+  
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - dotfiles

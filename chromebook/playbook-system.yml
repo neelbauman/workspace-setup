@@ -1,0 +1,14 @@
+# sudo (become: yes) が必要なタスクを実行します
+---
+- name: Setup Workstation (System-wide)
+  hosts: workstation
+  become: true # sudoで実行
+  
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - base
+    - cli-tools
+    - gui-apps
+    - japanese
