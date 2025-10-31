@@ -31,3 +31,21 @@
     src: secret_env.conf.j2
     dest: "/home/{{ target_user }}/.config/environment.d/99-secrets.conf"
     mode: '0600' # 機密情報なのでパーミッションを絞る
+
+- name: Copy .bashrc
+  ansible.builtin.copy:
+    src: files/.bashrc  # roles/dotfiles/files/.bashrc を指します
+    dest: "/home/{{ ansible_user_id }}/.bashrc"
+    mode: '0644'
+
+- name: Copy .vimrc
+  ansible.builtin.copy:
+    src: files/.vimrc
+    dest: "/home/{{ ansible_user_id }}/.vimrc"
+    mode: '0644'
+
+- name: Create .gitconfig from template
+  ansible.builtin.template:
+    src: .gitconfig.j2  # roles/dotfiles/templates/.gitconfig.j2 を指します
+    dest: "/home/{{ ansible_user_id }}/.gitconfig"
+    mode: '0644'
