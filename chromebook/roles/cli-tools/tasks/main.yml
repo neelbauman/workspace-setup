@@ -1,13 +1,14 @@
-# gh, docker-engine, imagemagick のインストール
+# cli tool
 ---
-# ImageMagick (標準リポジトリから)
 - name: Install ImageMagick
+  become: yes
   ansible.builtin.apt:
     name: imagemagick
     state: present
 
 # --- GitHub CLI Install ---
 - name: Add GitHub CLI GPG key
+  become: yes
   ansible.builtin.get_url:
     url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
     dest: /usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -15,12 +16,15 @@
     force: yes
 
 - name: Add GitHub CLI repository
+  become: yes
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+    # 修正: 'x86_64' を 'amd64' にマッピング
+    repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
     filename: github-cli
     state: present
 
 - name: Install GitHub CLI
+  become: yes
   ansible.builtin.apt:
     name: gh
     state: present
@@ -28,25 +32,42 @@
 
 # --- Docker Engine Install ---
 - name: Ensure /etc/apt/keyrings directory exists
+  become: yes
   ansible.builtin.file:
     path: /etc/apt/keyrings
     state: directory
     mode: '0755'
 
+# 修正: DockerのGPGキーを公式ドキュメントのパイプで処理します
 - name: Add Docker GPG key
-  ansible.builtin.get_url:
-    url: https://download.docker.com/linux/debian/gpg
-    dest: /etc/apt/keyrings/docker.gpg
-    mode: '0644'
-    force: yes
+  become: yes
+  ansible.builtin.shell:
+    # curl -fsSL ... | gpg --dearmor -o ...
+    # 公式ドキュメントのStep 4を冪等性を持たせて実行
+    cmd: "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+    warn: false
+  args:
+    # 冪等性: このファイルが既に存在すれば、cmdは実行しない
+    creates: /etc/apt/keyrings/docker.gpg
+
+# 修正: 公式ドキュメント(Step 5)に従い、GPGキーに読み取り権限を付与
+- name: Ensure Docker GPG key has correct permissions
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/docker.gpg
+    mode: '0644' # a+r (all users read)
+    state: file # 存在を確認
 
 - name: Add Docker repository
+  become: yes
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
+    # 修正: 'x86_64' を 'amd64' にマッピング
+    repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
     filename: docker
     state: present
 
 - name: Install Docker Engine packages
+  become: yes
   ansible.builtin.apt:
     name:
       - docker-ce
@@ -56,3 +77,4 @@
       - docker-compose-plugin
     state: present
     update_cache: yes
+
