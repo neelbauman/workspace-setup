@@ -11,11 +11,6 @@
   ansible.builtin.shell:
     # VSCode公式のインストール手順 (curl ... | gpg --dearmor)
     cmd: "curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft.gpg"
-  args:
-    # 冪等性: 古いキーは削除したので、このcmdは必ず実行される
-    # (creates: は使わない)
-    warn: false # shellモジュールは'warn'をサポートしていませんでした。commandモジュールを使うか、warnを削除します。
-               # 'warn: false' は command モジュール用でした。shellでは削除します。
 
 - name: Ensure Microsoft GPG key has correct permissions
   become: yes
