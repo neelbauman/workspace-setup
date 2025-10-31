@@ -1,13 +1,13 @@
 ---
 - name: Ensure user environment directory exists
   ansible.builtin.file:
-    path: "/home/{{ target_user }}/.config/environment.d"
+    path: "/home/{{ ansible_user_id }}/.config/environment.d"
     state: directory
     mode: '0755'
 
 - name: Set Fcitx5 environment variables
   ansible.builtin.lineinfile:
-    path: "/home/{{ target_user }}/.config/environment.d/im.conf"
+    path: "/home/{{ ansible_user_id }}/.config/environment.d/im.conf"
     line: "{{ item.line }}"
     regexp: "^{{ item.regexp | regex_escape() }}"
     create: yes
@@ -20,7 +20,7 @@
 
 - name: Set Fcitx5 autostart in .sommelierrc
   ansible.builtin.lineinfile:
-    path: "/home/{{ target_user }}/.sommelierrc"
+    path: "/home/{{ ansible_user_id }}/.sommelierrc"
     line: "/usr/bin/fcitx5 -d"
     regexp: "^/usr/bin/fcitx5 -d"
     create: yes
