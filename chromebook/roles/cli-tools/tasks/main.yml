@@ -6,6 +6,13 @@
     state: present
 
 # --- GitHub CLI Install ---
+
+- name: Clean up old GitHub CLI list file (if exists)
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/github-cli.list
+    state: absent
+
 - name: Add GitHub CLI GPG key
   become: yes
   ansible.builtin.get_url:
@@ -17,7 +24,6 @@
 - name: Add GitHub CLI repository
   become: yes
   ansible.builtin.apt_repository:
-    # 修正: 'x86_64' を 'amd64' にマッピング
     repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
     filename: github-cli
     state: present
@@ -37,30 +43,36 @@
     state: directory
     mode: '0755'
 
-# 修正: DockerのGPGキーを公式ドキュメントのパイプで処理します
-- name: Add Docker GPG key
+- name: Clean up old/bad Docker GPG key (if exists)
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/docker.gpg
+    state: absent
+
+- name: Add Docker GPG key (using shell pipeline)
   become: yes
   ansible.builtin.shell:
     # curl -fsSL ... | gpg --dearmor -o ...
-    # 公式ドキュメントのStep 4を冪等性を持たせて実行
+    # This command is now forced to run because the old file was removed.
     cmd: "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
-    # 修正: 'warn: false' パラメータを削除
-  args:
-    # 冪等性: このファイルが既に存在すれば、cmdは実行しない
-    creates: /etc/apt/keyrings/docker.gpg
+  # 'creates:' argument is removed to ensure it always runs after cleanup
 
-# 修正: 公式ドキュメント(Step 5)に従い、GPGキーに読み取り権限を付与
 - name: Ensure Docker GPG key has correct permissions
   become: yes
   ansible.builtin.file:
     path: /etc/apt/keyrings/docker.gpg
     mode: '0644' # a+r (all users read)
-    state: file # 存在を確認
+    state: file # Ensure it exists after creation
+
+- name: Clean up old Docker list file (if exists)
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/docker.list
+    state: absent
 
 - name: Add Docker repository
   become: yes
   ansible.builtin.apt_repository:
-    # 修正: 'x86_64' を 'amd64' にマッピング
     repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
     filename: docker
     state: present
@@ -76,3 +88,4 @@
       - docker-compose-plugin
     state: present
     update_cache: yes
+
