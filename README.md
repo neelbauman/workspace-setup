@@ -39,7 +39,7 @@ sudo apt install git ansible
 このリポジトリをローカルにクローンし、ディレクトリに移動します。
 
 ```bash
-git clone [https://github.com/neelbauman/workspace-setup.git](https://github.com/neelbauman/workspace-setup.git)
+git clone https://github.com/neelbauman/workspace-setup.git
 cd workspace-setup
 ```
 
