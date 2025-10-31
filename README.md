@@ -3,9 +3,6 @@
 1.  **準備:**
 
     1.  上記ファイル群でセットアップ用ディレクトリ（例: `dev`）を作成し、GitHubにPushします。
-    2.  `vars/main.yml` の `target_user` を編集します。
-    3.  `vars/secrets.yml.template` を `vars/secrets.yml` にコピーして機密情報を書き、`ansible-vault encrypt vars/secrets.yml` で暗号化します。（Vaultパスワードを覚えます）
-    4.  変更をコミット＆プッシュします。
 
 2.  **新しいLinux環境での実行:**
 
@@ -14,14 +11,14 @@
         ```bash
         curl -sL https://github.com/neelbauman/workspace-setup/main/bootstrap.sh
         ```
-    2.  `vars/main.yml` の `target_user` を編集します。
-    3.  `vars/secrets.yml.template` を `vars/secrets.yml` にコピーして機密情報を書き、`ansible-vault encrypt vars/secrets.yml` で暗号化します。（Vaultパスワードを覚えます）
-    3.  以下の
+    3.  `vars/main.yml` の `target_user` を編集します。
+    4.  `vars/secrets.yml.template` を `vars/secrets.yml` にコピーして機密情報を書き、`ansible-vault encrypt vars/secrets.yml` で暗号化します。（Vaultパスワードを覚えます）
+    5.  以下の
         ```bash
         cd workspace-setup && ./bootstrap.sh chromebook
         ```
-    4.  `sudo`のパスワードを1回、Vaultのパスワードを1回入力します。
-    5.  Ansibleが実行され、すべての設定が自動的に行われます。
+    6.  `sudo`のパスワードを1回、Vaultのパスワードを1回入力します。
+    7.  Ansibleが実行され、すべての設定が自動的に行われます。
 
 3.  **完了:**
 
