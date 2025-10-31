@@ -1,5 +1,15 @@
+# This file is managed by Ansible. Do not edit manually.
+
 [user]
-    name = "Your Name"
-    email = "{{ my_secret_email_variable }}"
-[github]
-    token = "{{ my_github_token }}"
+	name = {{ my_git_user_name }}
+	email = {{ my_git_user_email }}
+
+[core]
+	# 自動で改行コードを変換しない設定（Windows環境で問題になることがあるため）
+	autocrlf = input
+
+[color]
+	ui = auto
+
+[init]
+	defaultBranch = main
