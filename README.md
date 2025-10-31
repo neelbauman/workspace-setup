@@ -9,7 +9,7 @@
     1.  まっさらなDebian/Ubuntuにログインします。
     2.  `bootstrap.sh` のURLを指定してファイルを取得します。
         ```bash
-        curl -sL https://github.com/neelbauman/workspace-setup/main/blob/bootstrap.sh
+        curl -sL https://raw.githubusercontent.com/neelbauman/workspace-setup/refs/heads/main/bootstrap.sh
         ```
     3.  `vars/main.yml` の `target_user` を編集します。
     4.  `vars/secrets.yml.template` を `vars/secrets.yml` にコピーして機密情報を書き、`ansible-vault encrypt vars/secrets.yml` で暗号化します。（Vaultパスワードを覚えます）
