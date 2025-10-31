@@ -8,7 +8,6 @@
 # 使い方:
 # ./bootstrap.sh <ターゲット環境名>
 #    例: ./bootstrap.sh chromebook
-#    例: ./bootstrap.sh server
 #
 
 set -e
@@ -39,13 +38,15 @@ echo ">>> 2. (Bootstrap) Running Ansible Playbooks for '$TARGET_ENV'..."
 # ターゲット環境のディレクトリに移動して実行
 cd "$TARGET_DIR"
 
+# --- 修正点 ---
+# 両方のコマンドに --ask-vault-pass を追加
+
 # sudo (システム) Playbook の実行
-# (sudoパスワードを尋ねる)
-ansible-playbook -i inventory/hosts.ini playbook-system.yml --ask-become-pass
+# (sudoパスワードとVaultパスワードの両方を尋ねる)
+ansible-playbook -i inventory/hosts.ini playbook-system.yml --ask-become-pass --ask-vault-pass
 
 # ユーザー Playbook の実行
 # (Vaultパスワードを尋ねる)
 ansible-playbook -i inventory/hosts.ini playbook-user.yml --ask-vault-pass
 
 echo ">>> (Bootstrap) Setup complete for '$TARGET_ENV'!"
-```
