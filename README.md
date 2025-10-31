@@ -12,7 +12,7 @@
     1.  まっさらなDebian/Ubuntuにログインします。
     2.  `bootstrap.sh` のURLを指定して、以下のコマンドを**1行実行**します。
         ```bash
-        curl -sL https://github.com/neelbauman/workspace-setup/main/bootstrap.sh | bash
+        curl -sL https://github.com/neelbauman/workspace-setup/main/bootstrap.sh && chmod +x bootstrap.sh && ./bootstrap.sh chromebook
         ```
     3.  `sudo`のパスワードを1回、Vaultのパスワードを1回入力します。
     4.  Ansibleが実行され、すべての設定が自動的に行われます。
